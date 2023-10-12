@@ -85,13 +85,10 @@ page 50106 "Student List"
                     http_ResponseMsg: HttpResponseMessage;
                     response: Text;
                 begin
-                    http_Client.Get('https://jsonplaceholder.typicode.com/userss', http_ResponseMsg);
-                    http_ResponseMsg.Content.ReadAs(response);
-                    ReadResultFromResponse(response);
-
-
-
-
+                    if http_Client.Get('https://jsonplaceholder.typicode.com/users', http_ResponseMsg) then begin
+                        http_ResponseMsg.Content.ReadAs(response);
+                        ReadResultFromResponse(response);
+                    end;
                 end;
             }
         }
