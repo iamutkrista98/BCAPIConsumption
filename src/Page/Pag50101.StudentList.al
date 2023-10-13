@@ -62,6 +62,12 @@ page 50106 "Student List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Web ID field.';
                 }
+                field("IP"; IP)
+                {
+                    ApplicationArea = All;
+
+
+                }
             }
         }
 
@@ -89,6 +95,25 @@ page 50106 "Student List"
                         http_ResponseMsg.Content.ReadAs(response);
                         ReadResultFromResponse(response);
                     end;
+
+
+
+
+
+                end;
+            }
+            action(GetSystemIP)
+            {
+                ApplicationArea = All;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+                Image = Map;
+                trigger OnAction()
+                begin
+                    if not Confirm('Do you like to get the ip address?', false) then
+                        exit;
+                    IP := GetIP();
                 end;
             }
         }
@@ -196,4 +221,36 @@ page 50106 "Student List"
 
 
     end;
+
+
+    local procedure GetIP(): Text
+    var
+        Client: HttpClient;
+        Response: HttpResponseMessage;
+        JObj: JsonObject;
+        ResponseTxt: Text;
+
+    begin
+        if Client.Get('https://api.ipify.org?format=json', Response) then
+            if Response.IsSuccessStatusCode() then begin
+                Response.Content().ReadAs(ResponseTxt);
+                JObj.ReadFrom(ResponseTxt);
+                exit(GetJsonTextField(JObj, 'ip'));
+            end;
+
+    end;
+
+    local procedure GetJsonTextField(JObj: JsonObject; Member: Text): Text
+    var
+
+        Result: JsonToken;
+    begin
+        if JObj.Get(Member, Result) then
+            exit(Result.AsValue().AsText());
+    end;
+
+
+    var
+        IP: Text;
+
 }

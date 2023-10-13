@@ -46,6 +46,7 @@ table 50105 Student
         {
             Caption = 'Web ID';
         }
+
     }
     keys
     {
