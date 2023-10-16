@@ -116,6 +116,28 @@ page 50106 "Student List"
                     IP := GetIP();
                 end;
             }
+            action(ReadDataFromForex)
+            {
+                ApplicationArea = All;
+                Promoted = true;
+                PromotedIsBig = true;
+                Image = MapDimensions;
+
+                trigger OnAction()
+                var
+                    Client: HttpClient;
+                    HResp: HttpResponseMessage;
+                    resp: Text;
+                    jsonObj: JsonObject;
+
+                begin
+                    if Client.Get('https://www.nrb.org.np/api/forex/v1/rates?page=1&per_page=100&from=2023-02-12&to=2023-02-12', HResp) then
+                        if HResp.IsSuccessStatusCode() then begin
+                            HResp.Content.ReadAs(resp);
+                            Message(resp);
+                        end;
+                end;
+            }
         }
     }
 
@@ -253,4 +275,9 @@ page 50106 "Student List"
     var
         IP: Text;
 
+
+    trigger OnOpenPage()
+    begin
+        Rec.Active := False;
+    end;
 }
