@@ -21,6 +21,8 @@ page 50106 "Student List"
                 {
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Name field.';
+                    ShowMandatory = true;
+
                 }
                 field("Phone No."; Rec."Phone No.")
                 {
@@ -62,7 +64,7 @@ page 50106 "Student List"
                     ApplicationArea = All;
                     ToolTip = 'Specifies the value of the Web ID field.';
                 }
-                field("IP"; IP)
+                field("IP"; Rec.IP)
                 {
                     ApplicationArea = All;
 
@@ -110,11 +112,31 @@ page 50106 "Student List"
                 PromotedIsBig = true;
                 Image = Map;
                 trigger OnAction()
+                var
+                    Stud: Record Student;
+
                 begin
                     if not Confirm('Do you like to get the ip address?', false) then
                         exit;
-                    IP := GetIP();
+                    Stud.Reset();
+                    Stud.SetRange("Web ID", Rec."Web ID");
+                    if Stud.FindSet() then
+                        repeat
+                            if Rec."Web ID" = 10 then begin
+
+                                Rec.IP := GetIP();
+                                Stud.Modify();
+                            end
+                            else begin
+
+                                Rec.IP := '';
+                            end;
+                        until Stud.Next() = 0;
                 end;
+
+
+
+
             }
             action(ReadDataFromForex)
             {

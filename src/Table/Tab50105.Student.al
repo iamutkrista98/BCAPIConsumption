@@ -46,6 +46,10 @@ table 50105 Student
         {
             Caption = 'Web ID';
         }
+        field(11; IP; Text[100])
+        {
+
+        }
 
     }
     keys
@@ -55,4 +59,9 @@ table 50105 Student
             Clustered = true;
         }
     }
+    trigger OnInsert()
+    begin
+        if Rec.Name = '' then
+            Error('Name must have a value');
+    end;
 }
