@@ -160,7 +160,28 @@ page 50106 "Student List"
                         end;
                 end;
             }
+            action(DateEvaluatpr)
+            {
+                ApplicationArea = All;
+                Promoted = true;
+                PromotedCategory = Process;
+                PromotedIsBig = true;
+
+                trigger OnAction()
+                var
+                    Date1: Date;
+                    c: Record "Cust. Ledger Entry";
+                begin
+                    c.SetFilter("Posting Date", 'YESTERDAY..TOMORROW');
+                    Date1 := CalcDate('CQ+1M', Today());
+                    Message('The date is: %1', Date1);
+                    Message(c.GetFilter("Posting Date"));
+
+                end;
+
+            }
         }
+
     }
 
     local procedure ReadResultFromResponse(response: Text)
